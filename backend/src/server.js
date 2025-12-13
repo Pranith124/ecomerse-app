@@ -3,6 +3,7 @@ import path from 'path';
 import { ENV } from './config/env.js';
 import { connectDB } from './config/db.js';
 import { clerkMiddleware } from '@clerk/express'
+import { connection } from 'mongoose';
 
 const app = express();
 
@@ -25,7 +26,11 @@ if(ENV.NODE_ENV === 'production'){{
 app.get('')
 
 
-app.listen(ENV.PORT,() =>{
-    console.log("server is Up and running ");
-    connectDB();
-});
+const startServer= async() =>{
+    await connectDB();
+    app.listen(ENV.PORT,()=>{
+        console.log(`Server running in ${ENV.NODE_ENV} mode on port ${ENV.PORT}`);
+    })
+};
+
+startServer();
