@@ -3,7 +3,8 @@ import path from 'path';
 import { ENV } from './config/env.js';
 import { connectDB } from './config/db.js';
 import { clerkMiddleware } from '@clerk/express'
-import { connection } from 'mongoose';
+import mongoose from 'mongoose'; // Import the default export/entire package object
+const { Connection } = mongoose;
 
 const app = express();
 
