@@ -7,6 +7,10 @@ export async function addAddress(req,res){
 
         const user=req.user;
 
+        if(!fullName || !streetAddress || !city || !state || !zipcode || !phoneNumber){
+            return res.status(400).json({message:"All fields are required"});
+        }
+
         if (isDefault){
             User.addresses.forEach((addres)=>{
                 addres.isDefault=false;
@@ -132,7 +136,7 @@ export async function removeFromWishlist(req,res){
 
 export async function getWishlist(req,res){
     try{
-        const user=req.user;
+        const user= await user.findbyId(req.user._id).populate('wishlist'); 
         res.status(200).json({wishlist:user.wishlist});
     }catch(error){
         console.error("Error in getWishlist controller",error);
