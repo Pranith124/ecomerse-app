@@ -1,6 +1,6 @@
 
-import {product} from '../models/product.model.js';
-import {order} from '../models/order.model.js';
+import {Product} from '../models/product.model.js';
+import {Order} from '../models/order.model.js';
 import { User } from '../models/user.model.js';
 import cloudinary from '../config/cloudinary.js';
 
@@ -29,7 +29,7 @@ export async function createProduct(req,res){
 
         const imageUrls = uploadResults.map((result) => result.secure_url);
 
-        const product = await product.create({
+        const product = await Product.create({
             name,
             description,
             price : parseFloat(price),
@@ -48,7 +48,7 @@ export async function createProduct(req,res){
 
 export async function getAllProducts(req,res){
     try{
-        const products = await product.find().sort({createdAt:-1});
+        const products = await Product.find().sort({createdAt:-1});
         res.status(200).json(products);
     }
     catch(error){
@@ -61,7 +61,7 @@ export async function updateProduct(req,res){
     try{
         const {id}=req.params;
         const {name,description,price,category,stock}= req.body;
-        const product= await product.findById(id);
+        const product= await Product.findById(id);
         if (!product){
             return res.status(404).json({message:"Product not found"});
         }
@@ -95,7 +95,7 @@ export async function updateProduct(req,res){
 
 export async function getAllOrders(req,res){
     try{
-        const orders= (await order.find().populate('user',"name email").populate("orderItems.product")).sort({createdAt:-1})
+        const orders= (await Order.find().populate('user',"name email").populate("orderItems.product")).sort({createdAt:-1})
 
         res.status(200).json(orders);
     }catch(error){
