@@ -1,18 +1,35 @@
 import React from 'react'
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, useAuth, UserButton } from '@clerk/clerk-react';
+import LoginPage from './pages/LoginPage';
+import { Navigate, Route, Routes } from 'react-router';
+import DashBoardPage from './pages/DashBoardPage';
+import ProductsPage from './pages/ProductsPage';
+import OrdersPage from './pages/OrdersPage';
+import CustomersPage from './pages/CustomersPage';
+import DashboardLayout from './layouts/DashboardLayout';
+import PageLoader from './components/pageLoader';
 
 
 function App() {
+
+  const {isSignedIn,isLoaded}= useAuth();
+  if(!isLoaded) return <PageLoader/>;
+
   return (
-    <div>
-      <h1>Home Page</h1>
-       <SignedOut>
-        <SignInButton  mode="modal"/>
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </div>
+    <Routes>
+      <Route path='/login' element={isSignedIn? <Navigate to={"/dashboard"}/> :<LoginPage/>}/>
+
+      <Route path="/" element={isSignedIn? <DashboardLayout/> : <Navigate to={"/login"}/>}>
+        <Route index element={<Navigate to={"dashboard"}/>}/>
+        <Route path='dashboard' element={<DashBoardPage/>}/>
+        <Route path='products' element={<ProductsPage/>}/>
+        <Route path="orders" element={<OrdersPage/>}/>
+        <Route path='customers' element={<CustomersPage/>}/>
+
+      
+      </Route>
+    </Routes>
+    
   )
 }
 
