@@ -50,12 +50,15 @@ export async function getUserOrders(req,res){
         const user=req.user;
         const orders= await Order.find({clerkId:user.clerkId}).populate("orderItems.product").sort({createdAt:-1});
 
+        const orderIds= orders.map((order) => order._id);
+        const reviews=await Review.find({order:{$in:orderIds}});
+        const reviewOrderIds = new Set(reviews.map((review) => review.order.toString()));
+
         const orderWithReviewStatus=  await Promise.all(
             orders.map(async(order)=>{
-                const review =await Review.findOne({order:order._id})
                 return {
                     ...order.toObject(),
-                    hasReview: !!review,
+                    hasReview: reviewOrderIds.has(order._id.toString()),
                 }
             })
         )
