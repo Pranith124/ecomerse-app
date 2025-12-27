@@ -6,10 +6,10 @@ export const protectRoute =[
     requireAuth(),
     async (req,res,next)=>{
         try{
-            const clerkId = req.auth().userId;
+            const clerkId = req.auth.userId;
             if (!clerkId)return res.status(401).json({message:"Unauthorized - invalid token"});
 
-            const user=await user.findOne({clerkId});
+            const user=await User.findOne({clerkId});
             if(!user) return res.status(401).json({message:"User not found"});
             req.user=user;
 
@@ -29,7 +29,7 @@ export const adminOnly = (req,res,next) =>{
         return res.status(401).json({message:"Unauthorized - User not found"});
     }
 
-    if(req.uesr.email !== ENV.ADMIN_EMAIL){
+    if(req.user.email !== ENV.ADMIN_EMAIL){
         return res.status(403).json({message:"Forbidden - Admins only"});
     }
 
