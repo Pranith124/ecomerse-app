@@ -7,7 +7,7 @@ import ProductsPage from './pages/ProductsPage';
 import OrdersPage from './pages/OrdersPage';
 import CustomersPage from './pages/CustomersPage';
 import DashboardLayout from './layouts/DashboardLayout';
-import PageLoader from './components/pageLoader';
+import PageLoader from './components/PageLoader'
 
 
 function App() {
